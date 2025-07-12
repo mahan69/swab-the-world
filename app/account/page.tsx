@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { User, Package, Heart, CreditCard, LogOut, Settings } from "lucide-react"
@@ -8,37 +8,48 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { signOut, useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 export default function AccountPage() {
-  const [activeTab, setActiveTab] = useState("profile")
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("profile");
 
-  // Mock user data
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading" || status === "unauthenticated") return null;
+
   const user = {
-    name: "Mahan Khanipour",
-    email: "mahan.khanipour7@gmail.com",
-    phone: "+989118090476",
-    address: "123 Main Street, Tehran, Iran",
-  }
+    name: session?.user?.name || "",
+    email: session?.user?.email || "",
+    phone: "",
+    address: "",
+  };
 
   // Mock order data
   const orders = [
     {
       id: "ORD-12345",
-      date: "May 15, 2023",
+      date: "May 15, 2026",
       status: "Delivered",
       total: 449.98,
       items: 2,
     },
     {
       id: "ORD-12346",
-      date: "April 28, 2023",
+      date: "April 28, 2026",
       status: "Processing",
       total: 599.99,
       items: 1,
     },
     {
       id: "ORD-12347",
-      date: "March 10, 2023",
+      date: "March 10, 2026",
       status: "Delivered",
       total: 149.99,
       items: 1,
@@ -120,7 +131,7 @@ export default function AccountPage() {
                   >
                     <Settings className="mr-2 h-4 w-4" /> Settings
                   </Button>
-                  <Button variant="ghost" className="w-full justify-start text-gray-600">
+                  <Button variant="ghost" className="w-full justify-start text-gray-600" onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" /> Logout
                   </Button>
                 </nav>

@@ -23,7 +23,7 @@ const product = {
     "Crafted from the finest leather, this premium jacket combines style and durability. The sleek design and attention to detail make it a perfect addition to any wardrobe. Featuring multiple pockets and a comfortable fit, it's ideal for both casual and semi-formal occasions.",
   rating: 4.8,
   reviewCount: 124,
-  sku: "LJ-2023-001",
+      sku: "LJ-2026-001",
   availability: "In Stock",
   brand: "Mahan Luxe",
   category: "Clothing",
@@ -412,7 +412,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                         <div key={review} className="border-b border-gray-200 pb-6">
                           <div className="flex justify-between mb-2">
                             <div className="font-medium text-gray-900">John Doe</div>
-                            <div className="text-sm text-gray-500">March 15, 2023</div>
+                            <div className="text-sm text-gray-500">March 15, 2026</div>
                           </div>
                           <div className="flex items-center mb-2">
                             {[...Array(5)].map((_, i) => (

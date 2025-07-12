@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, ShoppingBag, Star } from "lucide-react"
+import { useProductActions } from "@/lib/product-actions"
 
 const relatedProducts = [
   {
@@ -45,6 +46,7 @@ const relatedProducts = [
 
 export default function RelatedProducts() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
+  const { addToCart, addToWishlist } = useProductActions()
 
   return (
     <section className="mt-16">
@@ -89,6 +91,7 @@ export default function RelatedProducts() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                  onClick={() => addToCart(product)}
                 >
                   <ShoppingBag size={18} />
                 </motion.button>
@@ -96,6 +99,7 @@ export default function RelatedProducts() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                  onClick={() => addToWishlist(product)}
                 >
                   <Heart size={18} />
                 </motion.button>

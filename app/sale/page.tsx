@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Heart, ShoppingBag, Eye, Filter, ChevronDown, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useProductActions } from "@/lib/product-actions"
 import { Slider } from "@/components/ui/slider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -169,6 +170,7 @@ export default function SalePage() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
   const [priceRange, setPriceRange] = useState([0, 5000])
   const [filterOpen, setFilterOpen] = useState(false)
+  const { addToCart, addToWishlist, viewProduct } = useProductActions()
   const [sortBy, setSortBy] = useState("discount")
 
   return (
@@ -353,6 +355,7 @@ export default function SalePage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                          onClick={() => addToCart(product)}
                         >
                           <ShoppingBag size={18} />
                         </motion.button>
@@ -360,6 +363,7 @@ export default function SalePage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                          onClick={() => addToWishlist(product)}
                         >
                           <Heart size={18} />
                         </motion.button>
@@ -367,6 +371,7 @@ export default function SalePage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                          onClick={() => viewProduct(product.id)}
                         >
                           <Eye size={18} />
                         </motion.button>

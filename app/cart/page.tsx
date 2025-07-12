@@ -7,50 +7,62 @@ import { motion } from "framer-motion"
 import { Trash2, Minus, Plus, RefreshCw, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useSession } from "next-auth/react"
+import React, { useEffect } from "react"
 
-// Mock cart data
-const initialCartItems = [
-  {
-    id: 1,
-    name: "Premium Leather Jacket",
-    price: 299.99,
-    image: "/placeholder.svg?height=400&width=300",
-    color: "Black",
-    size: "L",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "Designer Sunglasses",
-    price: 149.99,
-    image: "/placeholder.svg?height=400&width=300",
-    color: "Tortoise",
-    size: "One Size",
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Luxury Watch",
-    price: 599.99,
-    image: "/placeholder.svg?height=400&width=300",
-    color: "Silver",
-    size: "One Size",
-    quantity: 1,
-  },
-]
+// Cart will be empty by default - no mock data
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems)
+  const { data: session } = useSession();
+  const [cartItems, setCartItems] = useState([])
   const [couponCode, setCouponCode] = useState("")
   const [couponApplied, setCouponApplied] = useState(false)
 
+  // Fetch cart from API when user logs in
+  useEffect(() => {
+    if (session) {
+      fetch("/api/cart", {
+        credentials: "include", // Include cookies
+      })
+        .then((res) => res.json())
+        .then((data) => setCartItems(data.cart || []))
+        .catch((error) => console.error("Error fetching cart:", error))
+    } else {
+      setCartItems([])
+    }
+  }, [session])
+
+  // Sync cart to server
+  const syncCart = (newCart: any[]) => {
+    setCartItems(newCart)
+    fetch("/api/cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // Include cookies
+      body: JSON.stringify({ cart: newCart }),
+    }).catch((error) => console.error("Error syncing cart:", error))
+  }
+
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return
-    setCartItems(cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
+    const newCart = cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item))
+    syncCart(newCart)
   }
 
   const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id))
+    const newCart = cartItems.filter((item) => item.id !== id)
+    syncCart(newCart)
+  }
+
+  const addItem = (item: any) => {
+    const exists = cartItems.find((i) => i.id === item.id)
+    let newCart
+    if (exists) {
+      newCart = cartItems.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)
+    } else {
+      newCart = [...cartItems, { ...item, quantity: 1 }]
+    }
+    syncCart(newCart)
   }
 
   const applyCoupon = () => {
@@ -166,9 +178,6 @@ export default function CartPage() {
                     >
                       <RefreshCw className="h-4 w-4 mr-2" /> Continue Shopping
                     </Link>
-                    <Button variant="outline" className="ml-auto" onClick={() => setCartItems(initialCartItems)}>
-                      Update Cart
-                    </Button>
                   </div>
                 </div>
               </div>

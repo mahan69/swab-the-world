@@ -6,12 +6,13 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, ShoppingBag, Eye, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useProductActions } from "@/lib/product-actions"
 
 // Collection data
 const collections = {
   1: {
     id: 1,
-    name: "Summer 2023",
+    name: "Summer 2026",
     description:
       "Discover our exclusive summer collection featuring lightweight fabrics and vibrant colors, perfect for warm weather and vacation getaways. Each piece is crafted with premium materials and attention to detail.",
     image: "/placeholder.svg?height=600&width=1200",
@@ -169,6 +170,7 @@ const collections = {
 
 export default function CollectionPage({ params }: { params: { id: string } }) {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
+  const { addToCart, addToWishlist, viewProduct } = useProductActions()
 
   const collectionId = Number.parseInt(params.id)
   const collection = collections[collectionId as keyof typeof collections]
@@ -237,6 +239,7 @@ export default function CollectionPage({ params }: { params: { id: string } }) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => addToCart(product)}
                     >
                       <ShoppingBag size={18} />
                     </motion.button>
@@ -244,6 +247,7 @@ export default function CollectionPage({ params }: { params: { id: string } }) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => addToWishlist(product)}
                     >
                       <Heart size={18} />
                     </motion.button>
@@ -251,6 +255,7 @@ export default function CollectionPage({ params }: { params: { id: string } }) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => viewProduct(product.id)}
                     >
                       <Eye size={18} />
                     </motion.button>

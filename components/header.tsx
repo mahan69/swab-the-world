@@ -8,12 +8,15 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { motion, AnimatePresence } from "framer-motion"
+import { useSession } from "next-auth/react"
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [megaMenuOpen, setMegaMenuOpen] = useState<string | null>(null)
+  const [cartCount, setCartCount] = useState(0)
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +30,20 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  // Fetch cart count when user logs in
+  useEffect(() => {
+    if (session) {
+      fetch("/api/cart/count", {
+        credentials: "include", // Include cookies
+      })
+        .then((res) => res.json())
+        .then((data) => setCartCount(data.count))
+        .catch(() => setCartCount(0))
+    } else {
+      setCartCount(0)
+    }
+  }, [session])
 
   const toggleMegaMenu = (menu: string) => {
     if (megaMenuOpen === menu) {
@@ -128,9 +145,15 @@ export default function Header() {
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="relative">
             <Link href="/cart" className="p-2 text-gray-800 hover:text-primary transition-colors">
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                3
-              </span>
+              {session && cartCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm border border-white"
+                >
+                  {cartCount}
+                </motion.span>
+              )}
             </Link>
           </motion.div>
 
@@ -189,6 +212,25 @@ export default function Header() {
                   >
                     <Heart size={18} />
                     Wishlist
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Link
+                    href="/cart"
+                    className="flex items-center gap-2 text-gray-800 font-medium hover:text-primary transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <ShoppingBag size={18} />
+                    Cart
+                    {session && cartCount > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"
+                      >
+                        {cartCount}
+                      </motion.span>
+                    )}
                   </Link>
                 </div>
               </nav>
@@ -446,10 +488,10 @@ export default function Header() {
                     <ul className="space-y-2">
                       <li>
                         <Link
-                          href="/collections/summer-2023"
+                          href="/collections/summer-2026"
                           className="text-gray-600 hover:text-primary transition-colors"
                         >
-                          Summer 2023
+                          Summer 2026
                         </Link>
                       </li>
                       <li>
@@ -522,9 +564,9 @@ export default function Header() {
                           className="object-cover"
                         />
                         <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-4">
-                          <h4 className="text-xl font-bold text-white mb-1">Summer 2023</h4>
+                          <h4 className="text-xl font-bold text-white mb-1">Summer 2026</h4>
                           <Link
-                            href="/collections/summer-2023"
+                            href="/collections/summer-2026"
                             className="text-white/90 hover:text-white underline text-sm"
                           >
                             Explore Collection

@@ -49,14 +49,45 @@ export default function DonationSuccessPage() {
   }, [authority, status])
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        alert("کد پیگیری کپی شد")
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err)
-      })
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            alert("کد پیگیری کپی شد")
+          })
+          .catch((err) => {
+            console.error("Failed to copy: ", err)
+            // Fallback for older browsers
+            fallbackCopyTextToClipboard(text)
+          })
+      } else {
+        // Fallback for older browsers
+        fallbackCopyTextToClipboard(text)
+      }
+    } catch (err) {
+      console.error("Copy failed: ", err)
+      fallbackCopyTextToClipboard(text)
+    }
+  }
+
+  const fallbackCopyTextToClipboard = (text: string) => {
+    const textArea = document.createElement("textarea")
+    textArea.value = text
+    textArea.style.position = "fixed"
+    textArea.style.left = "-999999px"
+    textArea.style.top = "-999999px"
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    try {
+      document.execCommand("copy")
+      alert("کد پیگیری کپی شد")
+    } catch (err) {
+      console.error("Fallback copy failed: ", err)
+      alert("کپی کردن با مشکل مواجه شد")
+    }
+    document.body.removeChild(textArea)
   }
 
   const sharePayment = () => {

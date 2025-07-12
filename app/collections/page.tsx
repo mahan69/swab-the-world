@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 const collections = [
   {
     id: 1,
-    name: "Summer 2023",
+    name: "Summer 2026",
     description: "Discover our exclusive summer collection featuring lightweight fabrics and vibrant colors.",
     image: "/placeholder.svg?height=600&width=800",
     itemCount: 42,

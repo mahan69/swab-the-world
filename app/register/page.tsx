@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,16 +22,43 @@ export default function RegisterPage() {
     confirmPassword: "",
   })
   const [agreeTerms, setAgreeTerms] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle registration logic here
-    console.log(formData)
+    setError("")
+    setSuccess("")
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.firstName + " " + formData.lastName,
+        }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setSuccess("Registration successful! You can now log in.")
+        setTimeout(() => router.replace("/login"), 1500)
+      } else {
+        setError(data.error || "Registration failed")
+      }
+    } catch (err) {
+      setError("Server error")
+    }
   }
 
   return (
@@ -49,7 +76,8 @@ export default function RegisterPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Create an Account</h1>
                 <p className="text-gray-600">Join Mahan Luxe for a premium shopping experience</p>
               </div>
-
+              {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+              {success && <div className="text-green-600 text-center mb-4">{success}</div>}
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -67,12 +95,10 @@ export default function RegisterPage() {
                     <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
                   </div>
                 </div>
-
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
                 </div>
-
                 <div>
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
@@ -94,7 +120,6 @@ export default function RegisterPage() {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
                 </div>
-
                 <div>
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <div className="relative">
@@ -115,7 +140,6 @@ export default function RegisterPage() {
                     </button>
                   </div>
                 </div>
-
                 <div className="flex items-center">
                   <Checkbox
                     id="terms"
@@ -123,18 +147,17 @@ export default function RegisterPage() {
                     onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
                     required
                   />
-                  <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
-                    I agree to the{" "}
-                    <Link href="/terms" className="text-primary hover:underline">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="/privacy" className="text-primary hover:underline">
-                      Privacy Policy
-                    </Link>
-                  </label>
+                              <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
+              I agree to the{" "}
+              <Link href="/terms-conditions" className="text-primary hover:underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy-policy" className="text-primary hover:underline">
+                Privacy Policy
+              </Link>
+            </label>
                 </div>
-
                 <Button
                   type="submit"
                   className="w-full bg-primary hover:bg-primary/90 text-white"
@@ -143,7 +166,6 @@ export default function RegisterPage() {
                   Create Account
                 </Button>
               </form>
-
               <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
@@ -153,7 +175,6 @@ export default function RegisterPage() {
                     <span className="px-2 bg-white text-gray-500">Or sign up with</span>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <Button variant="outline" className="w-full">
                     <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -186,7 +207,6 @@ export default function RegisterPage() {
                   </Button>
                 </div>
               </div>
-
               <div className="mt-8 text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?{" "}

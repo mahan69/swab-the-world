@@ -4,10 +4,11 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Heart, ShoppingBag, Filter, ChevronDown, Star, Search } from "lucide-react"
+import { Heart, ShoppingBag, Filter, ChevronDown, Star, Search, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useProductActions } from "@/lib/product-actions"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -206,6 +207,7 @@ export default function ShopPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [filteredProducts, setFilteredProducts] = useState(products)
+  const { addToCart, addToWishlist, viewProduct } = useProductActions()
 
   // Filter products based on selected filters
   useEffect(() => {
@@ -481,6 +483,12 @@ export default function ShopPage() {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                            onClick={e => { 
+                              console.log("Add to cart clicked for product:", product.name);
+                              e.preventDefault(); 
+                              e.stopPropagation(); 
+                              addToCart(product); 
+                            }}
                           >
                             <ShoppingBag size={18} />
                           </motion.button>
@@ -488,8 +496,27 @@ export default function ShopPage() {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                            onClick={e => { 
+                              console.log("Add to wishlist clicked for product:", product.name);
+                              e.preventDefault(); 
+                              e.stopPropagation(); 
+                              addToWishlist(product); 
+                            }}
                           >
                             <Heart size={18} />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                            onClick={e => { 
+                              console.log("View product clicked for product:", product.name);
+                              e.preventDefault(); 
+                              e.stopPropagation(); 
+                              viewProduct(product.id); 
+                            }}
+                          >
+                            <Eye size={18} />
                           </motion.button>
                         </motion.div>
                       </div>

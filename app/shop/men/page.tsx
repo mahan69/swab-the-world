@@ -9,131 +9,75 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useProductActions } from "@/lib/product-actions"
 
-// New arrivals products with luxury brands
-const newArrivalsProducts = [
+// Men's products
+const mensProducts = [
   {
-    id: 101,
-    name: "Monogram Canvas Handbag",
-    price: 2450.0,
+    id: 801,
+    name: "Italian Leather Jacket",
+    price: 1299.99,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Bags",
-    brand: "Louis Vuitton",
-    arrivalDate: "2 days ago",
-    rating: 4.9,
-  },
-  {
-    id: 102,
-    name: "Silk Twill Scarf",
-    price: 495.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    brand: "Hermès",
-    arrivalDate: "3 days ago",
-    rating: 4.8,
-  },
-  {
-    id: 103,
-    name: "Interlocking G Leather Belt",
-    price: 520.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
     brand: "Gucci",
-    arrivalDate: "5 days ago",
-    rating: 4.7,
+    category: "Outerwear",
   },
   {
-    id: 104,
-    name: "Medusa Head Sunglasses",
-    price: 395.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    brand: "Versace",
-    arrivalDate: "1 week ago",
-    rating: 4.6,
-  },
-  {
-    id: 105,
-    name: "Leather Ankle Boots",
-    price: 1290.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Shoes",
-    brand: "Prada",
-    arrivalDate: "1 week ago",
-    rating: 4.9,
-  },
-  {
-    id: 106,
+    id: 802,
     name: "Cashmere Sweater",
     price: 890.0,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Clothing",
     brand: "Brunello Cucinelli",
-    arrivalDate: "1 week ago",
-    rating: 4.8,
+    category: "Sweaters",
   },
   {
-    id: 107,
-    name: "Leather Card Holder",
-    price: 350.0,
+    id: 803,
+    name: "Silk Shirt",
+    price: 450.0,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    brand: "Saint Laurent",
-    arrivalDate: "10 days ago",
-    rating: 4.7,
+    brand: "Loro Piana",
+    category: "Shirts",
   },
   {
-    id: 108,
+    id: 804,
     name: "Wool Blazer",
     price: 2200.0,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Clothing",
     brand: "Tom Ford",
-    arrivalDate: "10 days ago",
-    rating: 4.9,
+    category: "Blazers",
   },
   {
-    id: 109,
-    name: "Leather Loafers",
-    price: 750.0,
+    id: 805,
+    name: "Linen Pants",
+    price: 380.0,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Shoes",
-    brand: "Salvatore Ferragamo",
-    arrivalDate: "2 weeks ago",
-    rating: 4.8,
+    brand: "Ermenegildo Zegna",
+    category: "Pants",
   },
   {
-    id: 110,
+    id: 806,
+    name: "Leather Belt",
+    price: 290.0,
+    image: "/placeholder.svg?height=400&width=300",
+    brand: "Hermès",
+    category: "Accessories",
+  },
+  {
+    id: 807,
+    name: "Wool Scarf",
+    price: 350.0,
+    image: "/placeholder.svg?height=400&width=300",
+    brand: "Acne Studios",
+    category: "Accessories",
+  },
+  {
+    id: 808,
     name: "Silk Tie",
     price: 220.0,
     image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
     brand: "Ermenegildo Zegna",
-    arrivalDate: "2 weeks ago",
-    rating: 4.6,
-  },
-  {
-    id: 111,
-    name: "Diamond Stud Earrings",
-    price: 3500.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Jewelry",
-    brand: "Tiffany & Co.",
-    arrivalDate: "2 weeks ago",
-    rating: 4.9,
-  },
-  {
-    id: 112,
-    name: "Leather Crossbody Bag",
-    price: 1850.0,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Bags",
-    brand: "Bottega Veneta",
-    arrivalDate: "2 weeks ago",
-    rating: 4.8,
+    category: "Accessories",
   },
 ]
 
-export default function NewArrivalsPage() {
+export default function MensPage() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
   const [sortBy, setSortBy] = useState("newest")
   const [filterOpen, setFilterOpen] = useState(false)
@@ -143,13 +87,17 @@ export default function NewArrivalsPage() {
     <div className="pt-20">
       <section className="bg-gray-50 py-12">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">New Arrivals</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Men</h1>
           <div className="flex items-center text-gray-600">
             <Link href="/" className="hover:text-primary transition-colors">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span>New Arrivals</span>
+            <Link href="/shop" className="hover:text-primary transition-colors">
+              Shop
+            </Link>
+            <span className="mx-2">/</span>
+            <span>Men</span>
           </div>
         </div>
       </section>
@@ -158,8 +106,8 @@ export default function NewArrivalsPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center mb-8">
             <div className="mb-4 md:mb-0">
-              <h2 className="text-2xl font-bold text-gray-900">Latest Luxury Arrivals</h2>
-              <p className="text-gray-600">Discover our newest additions from top luxury brands</p>
+              <h2 className="text-2xl font-bold text-gray-900">Men's Luxury Fashion</h2>
+              <p className="text-gray-600">Discover our premium men's collection</p>
             </div>
             <div className="flex items-center">
               <div className="mr-4 md:hidden">
@@ -183,37 +131,8 @@ export default function NewArrivalsPage() {
             </div>
           </div>
 
-          <div
-            className={`md:flex space-y-4 md:space-y-0 md:space-x-4 mb-8 ${filterOpen ? "block" : "hidden md:flex"}`}
-          >
-            <Button
-              variant="outline"
-              className={`${
-                sortBy === "newest" ? "bg-primary text-white" : "bg-white text-gray-700"
-              } hover:bg-primary hover:text-white`}
-              onClick={() => setSortBy("newest")}
-            >
-              All
-            </Button>
-            <Button variant="outline" className="bg-white text-gray-700 hover:bg-primary hover:text-white">
-              Clothing
-            </Button>
-            <Button variant="outline" className="bg-white text-gray-700 hover:bg-primary hover:text-white">
-              Shoes
-            </Button>
-            <Button variant="outline" className="bg-white text-gray-700 hover:bg-primary hover:text-white">
-              Bags
-            </Button>
-            <Button variant="outline" className="bg-white text-gray-700 hover:bg-primary hover:text-white">
-              Accessories
-            </Button>
-            <Button variant="outline" className="bg-white text-gray-700 hover:bg-primary hover:text-white">
-              Jewelry
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {newArrivalsProducts.map((product, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {mensProducts.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -234,10 +153,6 @@ export default function NewArrivalsPage() {
                       />
                     </div>
                   </Link>
-
-                  <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
-                    NEW
-                  </div>
 
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -279,49 +194,13 @@ export default function NewArrivalsPage() {
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-primary font-bold mb-1">${product.price.toFixed(2)}</p>
-                  <p className="text-xs text-gray-500">Added {product.arrivalDate}</p>
+                  <p className="text-primary font-bold">${product.price.toFixed(2)}</p>
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          <div className="mt-12 flex justify-center">
-            <Button variant="outline" className="mr-2">
-              Previous
-            </Button>
-            <Button variant="outline" className="bg-primary text-white">
-              1
-            </Button>
-            <Button variant="outline" className="mx-2">
-              2
-            </Button>
-            <Button variant="outline">3</Button>
-            <Button variant="outline" className="ml-2">
-              Next
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Subscribe for New Arrivals</h2>
-            <p className="text-gray-600 mb-8">
-              Be the first to know about our newest luxury arrivals, exclusive collections, and special events.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-1 px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <Button className="bg-primary hover:bg-primary/90 text-white whitespace-nowrap">Subscribe</Button>
-            </div>
           </div>
         </div>
       </section>
     </div>
   )
-}
+} 

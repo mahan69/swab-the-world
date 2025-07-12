@@ -80,7 +80,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/shop/sale" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/sale" className="text-gray-400 hover:text-primary transition-colors">
                   Sale
                 </Link>
               </li>
@@ -106,17 +106,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/shipping-returns" className="text-gray-400 hover:text-primary transition-colors">
                   Shipping & Returns
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/terms-conditions" className="text-gray-400 hover:text-primary transition-colors">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-primary transition-colors">
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
@@ -167,10 +167,10 @@ export default function Footer() {
         >
           <p>&copy; {new Date().getFullYear()} Mahan Luxe. All rights reserved.</p>
           <div className="mt-4 space-x-6">
-            <Link href="/privacy" className="hover:text-primary transition-colors">
+            <Link href="/privacy-policy" className="hover:text-primary transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">
+            <Link href="/terms-conditions" className="hover:text-primary transition-colors">
               Terms of Service
             </Link>
           </div>

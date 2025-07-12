@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -10,17 +9,30 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log({ email, password, rememberMe })
+    setError("")
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    })
+    if (res?.ok) {
+      router.replace("/account")
+    } else {
+      setError("Invalid email or password")
+    }
   }
 
   return (
@@ -38,13 +50,12 @@ export default function LoginPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
                 <p className="text-gray-600">Sign in to your Mahan Luxe account</p>
               </div>
-
+              {error && <div className="text-red-500 text-center mb-4">{error}</div>}
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Label htmlFor="email">Email Address</Label>
                   <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
-
                 <div>
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
@@ -64,7 +75,6 @@ export default function LoginPage() {
                     </button>
                   </div>
                 </div>
-
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Checkbox
@@ -80,12 +90,10 @@ export default function LoginPage() {
                     Forgot password?
                   </Link>
                 </div>
-
                 <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white">
                   Sign In
                 </Button>
               </form>
-
               <div className="mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
@@ -95,7 +103,6 @@ export default function LoginPage() {
                     <span className="px-2 bg-white text-gray-500">Or continue with</span>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <Button variant="outline" className="w-full">
                     <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -128,7 +135,6 @@ export default function LoginPage() {
                   </Button>
                 </div>
               </div>
-
               <div className="mt-8 text-center">
                 <p className="text-sm text-gray-600">
                   Don't have an account?{" "}

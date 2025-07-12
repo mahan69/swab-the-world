@@ -1,55 +1,52 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Trash2, ShoppingBag, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useSession } from "next-auth/react"
 
-// Mock wishlist data
-const initialWishlistItems = [
-  {
-    id: 1,
-    name: "Premium Leather Jacket",
-    price: 299.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Clothing",
-    inStock: true,
-  },
-  {
-    id: 2,
-    name: "Designer Sunglasses",
-    price: 149.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    inStock: true,
-  },
-  {
-    id: 3,
-    name: "Luxury Watch",
-    price: 599.99,
-    originalPrice: 799.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    inStock: false,
-    discount: 25,
-  },
-  {
-    id: 4,
-    name: "Designer Handbag",
-    price: 349.99,
-    image: "/placeholder.svg?height=400&width=300",
-    category: "Accessories",
-    inStock: true,
-  },
-]
+// Wishlist will be empty by default - no mock data
 
 export default function WishlistPage() {
-  const [wishlistItems, setWishlistItems] = useState(initialWishlistItems)
+  const { data: session } = useSession();
+  const [wishlistItems, setWishlistItems] = useState([])
+
+  // Fetch wishlist from API when user logs in
+  useEffect(() => {
+    if (session) {
+      fetch("/api/wishlist", {
+        credentials: "include", // Include cookies
+      })
+        .then((res) => res.json())
+        .then((data) => setWishlistItems(data.wishlist || []))
+        .catch((error) => {
+          console.error("Error fetching wishlist:", error);
+          setWishlistItems([]);
+        });
+    } else {
+      setWishlistItems([])
+    }
+  }, [session])
 
   const removeItem = (id: number) => {
-    setWishlistItems(wishlistItems.filter((item) => item.id !== id))
+    fetch("/api/wishlist", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // Include cookies
+      body: JSON.stringify({ productId: id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setWishlistItems(wishlistItems.filter((item) => item.id !== id));
+        }
+      })
+      .catch((error) => {
+        console.error("Error removing item from wishlist:", error);
+      });
   }
 
   return (
@@ -69,7 +66,18 @@ export default function WishlistPage() {
 
       <section className="py-12">
         <div className="container mx-auto px-4">
-          {wishlistItems.length > 0 ? (
+          {!session ? (
+            <div className="text-center py-16">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-6">
+                <Heart className="h-10 w-10 text-gray-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Please log in to view your wishlist</h2>
+              <p className="text-gray-600 mb-8">You need to be logged in to access your wishlist.</p>
+              <Button className="bg-primary hover:bg-primary/90 text-white" size="lg" asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
+            </div>
+          ) : wishlistItems.length > 0 ? (
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               <div className="hidden md:grid grid-cols-12 gap-4 p-6 border-b border-gray-200 bg-gray-50">
                 <div className="col-span-6 font-medium text-gray-900">Product</div>
